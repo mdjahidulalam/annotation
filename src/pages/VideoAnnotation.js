@@ -42,8 +42,8 @@ function VideoAnnotation() {
             <tr key={v.id}>
                 <td>{v.key}</td>
                 <td>{v.value}</td>
-                <td>
-                    <button className='btn btn-outline-info' onClick={() => handleDeleteMeta(v.id)}>Delete</button>
+                <td width="20">
+                    <button className='btn btn-sm btn-danger' onClick={() => handleDeleteMeta(v.id)}>Delete</button>
                 </td>
             </tr>
         );
@@ -170,11 +170,13 @@ function VideoAnnotation() {
                 <td>{v.word}</td>
                 <td>{(getStringFromMS(v.vst * 1000).split('.'))[0]}</td>
                 <td>{(getStringFromMS(v.vet * 1000).split('.'))[0]}</td>
-                <td>
-                    <button className='btn btn-outline-info' onClick={() => annotationPreviewHandler(v.vst, v.vet)}>
-                        Preview
+                <td width="50" className="text-nowrap">
+                    <button className='btn btn-sm btn-primary me-2' onClick={() => annotationPreviewHandler(v.vst, v.vet)}>
+                        <i class="fa-sharp fa-solid fa-eye"></i>
                     </button>
-                    <button className='btn btn-outline-info' onClick={() => annotationDeleteHandler(v.id)}>Delete</button>
+                    <button className='btn btn-sm btn-danger' onClick={() => annotationDeleteHandler(v.id)}>
+                        <i class="fa-sharp fa-solid fa-xmark"></i>
+                    </button>
                 </td>
             </tr>
         );
@@ -191,7 +193,7 @@ function VideoAnnotation() {
             annotationEndTime: new Date(),
             totalTimeSpend: (new Date() - videoInfo.StartTime) / 1000
         };
-        axios.post('http://192.168.1.34:4000/save', data)
+        axios.post('http://localhost:4000/save', data)
             .then(res => {
                 console.log(res);
             })
@@ -200,7 +202,7 @@ function VideoAnnotation() {
             })
     };
     useEffect(() => {
-        const link = `http://192.168.1.34:4000/videos/${url}`;
+        const link = `http://localhost:4000/videos/${url}`;
         axios
             .get(link)
             .then((res) => {
@@ -248,7 +250,7 @@ function VideoAnnotation() {
         // generate srt
         trackTest.addCue(new VTTCue(temp.vst, temp.vet, temp.word));
     }
-    const keyUpHandler = (e) =>{
+    const keyUpHandler = (e) => {
         console.log('key pressed');
         e.preventDefault();
     }
@@ -275,7 +277,7 @@ function VideoAnnotation() {
 
             <div className="container">
                 <div className="row">
-                    <div className="col-md-8 my-2">
+                    <aside className="col-md-8 my-2">
                         {/* <p className="text-center" id="signtext" onMouseUp={handleMouseUp}>
                             {videoInfo.signText}
                         </p> */}
@@ -294,13 +296,13 @@ function VideoAnnotation() {
                             }}
                         >
                             {videoInfo.videoUrl && (
-                                <div style={{marginBottom:'-1050px'}}>
+                                <div>
                                     <video
                                         id="myVideo"
                                         key={videoInfo.videoUrl}
                                         ref={videoRef}
-                                        width="100%"
-                                        height="20%"
+                                        width="400"
+                                        height="300"
                                         onLoadedMetadata={handleVideoMetaData}
                                         onTimeUpdate={getVideoTime}
                                     >
@@ -311,7 +313,7 @@ function VideoAnnotation() {
                                     <span style={{ float: 'right' }}>{(getStringFromMS(currentTime * 1000).split('.'))[0]}/{(getStringFromMS(Duration * 1000).split('.'))[0]}</span>
 
                                     <input type="range" ref={progressRef} style={{ width: '100%' }} id="vol" name="vol" min="0" max={Duration} step="0.01" onChange={progressHandler}></input>
-                                    <div id="showWord" style={{ backgroundColor: 'rgba(0,0,0,.05)',height:'48px' }}>
+                                    <div id="showWord" style={{ backgroundColor: 'rgba(0,0,0,.05)', height: '48px' }}>
                                         {annotation.map(v => {
                                             const duration = videoRef.current.duration;
                                             const elem = document.getElementById('showWord')
@@ -329,7 +331,7 @@ function VideoAnnotation() {
                                             return (
                                                 <div style={mystyle}>
                                                     {v.word}
-                                                    <span style={{display:'block'}}>
+                                                    <span style={{ display: 'block' }}>
                                                         {(getStringFromMS((v.vet - v.vst) * 1000).split('.'))[0]}
                                                     </span>
                                                 </div>
@@ -427,69 +429,75 @@ function VideoAnnotation() {
                             </thead>
                             <tbody>{tableData ? tableData : null}</tbody>
                         </table> */}
-                    </div>
+                    </aside>
 
-                    <div className="col-md-4 mx-auto my-2">
-                        <div className="form-group">
-                            <label htmlFor="key">Key</label>
-                            <input
-                                type="text"
-                                onChange={handleMetaKey}
-                                name="key"
-                                className="form-control"
-                                value={MetaKey}
-                                id="key"
-                                placeholder="Enter key"
-                            />
-                        </div>
-                        <div className="form-group">
-                            <label htmlFor="value">Value</label>
-                            <input
-                                type="text"
-                                onChange={handleMetaValue}
-                                name="value"
-                                className="form-control"
-                                value={MetaValue}
-                                id="value"
-                                placeholder="Enter value"
-                            />
-                        </div>
-                        <button className='btn btn-outline-info'
-                            type="submit"
-                            onClick={handleAddMeta}
-                        >
-                            Add
-                        </button>
+                    <aside className="col-md-4 mx-auto my-2">
+                        <section className="mb-5">
+                            <h1 className="fs-5">Insert New Meta</h1>
+                            <div className="mb-2 form-group">
+                                <label htmlFor="key">Key</label>
+                                <input
+                                    type="text"
+                                    onChange={handleMetaKey}
+                                    name="key"
+                                    className="form-control form-control-sm"
+                                    value={MetaKey}
+                                    id="key"
+                                    placeholder="Enter key"
+                                />
+                            </div>
+                            <div className="mb-3 form-group">
+                                <label htmlFor="value">Value</label>
+                                <input
+                                    type="text"
+                                    onChange={handleMetaValue}
+                                    name="value"
+                                    className="form-control form-control-sm"
+                                    value={MetaValue}
+                                    id="value"
+                                    placeholder="Enter value"
+                                />
+                            </div>
+                            <button className='btn btn-success btn-sm w-100' type="submit" onClick={handleAddMeta}>
+                                Add New Meta
+                            </button>
+                        </section>
+                        
+                        <section className="mb-5">
+                            <h1 className="fs-5">Meta Table</h1>
+                            <table className="table table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>Key</th>
+                                        <th>Value</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {metaTableData ? metaTableData : null}</tbody>
+                            </table>
+                        </section>
 
-                        <h3>Meta table</h3>
-                        <table className="table-sm table-striped">
-                            <thead>
-                                <tr>
-                                    <th>key</th>
-                                    <th>Value</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>{metaTableData ? metaTableData : null}</tbody>
-                        </table>
-                        <div>
-                            <h3>Annotation Table</h3>
+                        <section className="mb-5">
+                            <h1 className="fs-5">Annotation Table</h1>
                             <table
-                                className="table-sm table-striped"
+                                className="table table-sm"
                                 style={{ margin: "0px auto", padding: "5%" }}
                             >
                                 <thead>
                                     <tr>
                                         <th>Word</th>
-                                        <th>Video start</th>
-                                        <th>Video end</th>
-                                        <th>Actions</th>
+                                        <th width="25%">Video Start</th>
+                                        <th width="25%" >Video End</th>
+                                        <th width="25">Actions</th>
                                     </tr>
                                 </thead>
-                                <tbody>{tableData ? tableData : null}</tbody>
+                                <tbody>
+                                    {tableData ? tableData : null}
+                                </tbody>
                             </table>
-                        </div>
-                    </div>
+                        </section>
+                    </aside>
                 </div>
                 <button className="btn btn-info" onClick={submitHandler}>
                     Submit
