@@ -31,20 +31,20 @@ const Videos = () => {
             className="list-group-item list-group-item-action flex-column align-items-start "
         >
             <div className="d-flex w-100 justify-content-between">
-                <h5 className="mb-1">{v.bangla }</h5>
+                <h2 className="fs-6 fw-bold my-2">{v.bangla }</h2>
                 <small>{v.timestamp}</small>
             </div>
-            <p className="mb-1">Gloss: {v.gloss}</p>
-            <small>Topic: {v.Topic}</small>
+            <p className="mb-0">Gloss: {v.gloss}</p>
+            <p className="mb-1">Topic: {v.Topic}</p>
         </Link>
     ));
     return (
         <>
             <Nav />
-            <div className="container">
+            <div className="container py-3">
                 <div className="row">
-                    <div className="col-md-8 mx-auto">
-                        <h2 className="my-2">All Videos</h2>
+                    <div className="col-md-12 mx-auto">
+                        <h1 className="my-2 fs-5">All Videos</h1>
                         <div className="list-group">{allVideo}</div>
                         {/* <button className="btn btn-info my-2">Load more</button> */}
                     </div>
