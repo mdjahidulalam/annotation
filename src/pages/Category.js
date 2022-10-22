@@ -93,40 +93,42 @@ function Category() {
     }
     const renderData = Data ? Data.map(v => {
         return (
-            <div
-                key={v.id}
-                className="list-group-item list-group-item-action flex-column align-items-start "
-            >
-                <div className="form-check">
-                    <input
-                        className="form-check-input"
-                        type="checkbox"
-                        defaultChecked={CategoryId.includes(v.id)}
-                        id="flexCheckChecked"
-                        onChange={() => setChecked(v.id)} />
-                    <label className="form-check-label" htmlFor="flexCheckChecked">
-                    {CategoryId.includes(v.id)?"Click to remove from Category":"Click to add to Category"}
-                        
-                    </label>
-                </div>
+            <div className="container my-3">
+                <div
+                    key={v.id}
+                    className="list-group-item list-group-item-action flex-column align-items-start "
+                >
+                    <div className="form-check">
+                        <input
+                            className="form-check-input"
+                            type="checkbox"
+                            defaultChecked={CategoryId.includes(v.id)}
+                            id="flexCheckChecked"
+                            onChange={() => setChecked(v.id)} />
+                        <label className="form-check-label" htmlFor="flexCheckChecked">
+                        {CategoryId.includes(v.id)?"Click to remove from Category":"Click to add to Category"}
+                            
+                        </label>
+                    </div>
 
-                <div className="d-flex w-100 justify-content-between">
-                    <h5 className="mb-1">{v.videoLink}</h5>
-                    <small>{v.timestamp}</small>
+                    <div className="d-flex w-100 justify-content-between">
+                        <h5 className="mb-1">{v.videoLink}</h5>
+                        <small>{v.timestamp}</small>
+                    </div>
+                    <p className="mb-1">Gloss: {v.word}, Start at: {v.videoStart}, End at: {v.videoEnd}</p>
+                    <p className="mb-1">{v.signText}</p>
+                    <small>{v.naturalText}</small>
                 </div>
-                <p className="mb-1">Gloss: {v.word}, Start at: {v.videoStart}, End at: {v.videoEnd}</p>
-                <p className="mb-1">{v.signText}</p>
-                <small>{v.naturalText}</small>
             </div>
         )
     }) : null;
     return (
         <>
             <Nav />
-            <div className="container">
+            <div className="container my-3">
                 <div className="row">
                     <div className="col-md-6">
-                        <div className="form-group">
+                        <div className="mb-3 form-group">
                             <label htmlFor="exampleInputEmail1">Gloss</label>
                             <input
                                 type="text"
@@ -137,7 +139,7 @@ function Category() {
                                 placeholder="gloss search"
                             />
                         </div>
-                        <div className="form-group">
+                        <div className="mb-3 form-group">
                             <label htmlFor="exampleInputPassword1">Meta</label>
                             <input
                                 type="text"
@@ -151,7 +153,7 @@ function Category() {
                         <button className="btn btn-success" onClick={searchHandler}>Search</button>
                     </div>
                     <div className="col-md-6">
-                        <div className="form-group">
+                        <div className="mb-3 form-group">
                             <label htmlFor="exampleInputPassword1">Add category</label>
                             <input
                                 type="text"
