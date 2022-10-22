@@ -171,7 +171,7 @@ function VideoAnnotation() {
                 <td>{(getStringFromMS(v.vst * 1000).split('.'))[0]}</td>
                 <td>{(getStringFromMS(v.vet * 1000).split('.'))[0]}</td>
                 <td width="50" className="text-nowrap">
-                    <button className='btn btn-sm btn-primary me-2' onClick={() => annotationPreviewHandler(v.vst, v.vet)}>
+                    <button className='btn btn-sm btn-outline-dark me-2' onClick={() => annotationPreviewHandler(v.vst, v.vet)}>
                         <i class="fa-sharp fa-solid fa-eye"></i>
                     </button>
                     <button className='btn btn-sm btn-danger' onClick={() => annotationDeleteHandler(v.id)}>
@@ -254,7 +254,7 @@ function VideoAnnotation() {
         console.log('key pressed');
         e.preventDefault();
     }
-    const keywords = words.map(v => <button className='btn btn-outline-info' onKeyUp={(e) => {
+    const keywords = words.map(v => <button className='btn btn-sm btn-light' onKeyUp={(e) => {
         e.preventDefault();
     }} onClick={() => handleWords(v)}>{v}</button>)
     const progressHandler = (e) => {
@@ -275,45 +275,43 @@ function VideoAnnotation() {
             {/* {url} */}
             <Nav />
 
-            <div className="container">
+            <div className="container py-4">
                 <div className="row">
                     <aside className="col-md-8 my-2">
                         {/* <p className="text-center" id="signtext" onMouseUp={handleMouseUp}>
                             {videoInfo.signText}
                         </p> */}
-                        <p className="text-center" id="signtext">
-                            Natural Bangla: {videoInfo.naturalText}
-                        </p>
-                        <p className="text-center" id="signtext">
-                            Sign supported gloss: {videoInfo.signText}
-                        </p>
-                        <div
-                            className="mx-auto"
-                            style={{
-                                display: "flex",
-                                alignItem: "center",
-                                justifyContent: "center",
-                            }}
-                        >
+                        <header className="mb-3">
+                            <p className="mb-1" id="signtext">
+                                <strong className="d-block">Natural Bangla:</strong> 
+                                <span>{videoInfo.naturalText}</span>
+                            </p>
+                            <p className="mb-1" id="signtext">
+                                <strong className="d-block">Sign Supported Gloss:</strong> 
+                                <span>{videoInfo.signText}</span> 
+                            </p>
+                        </header>
+                        <section className="bg-secondary d-flex flex-column justify-content-center align-items-center p-4 rounded-top">
                             {videoInfo.videoUrl && (
-                                <div>
-                                    <video
-                                        id="myVideo"
-                                        key={videoInfo.videoUrl}
-                                        ref={videoRef}
-                                        width="400"
-                                        height="300"
-                                        onLoadedMetadata={handleVideoMetaData}
-                                        onTimeUpdate={getVideoTime}
-                                    >
-                                        <source src={videoInfo.videoUrl} type="video/mp4" />
-                                    </video>
+                                <div className="w-100 position-relative">
+                                    <div className="ratio ratio-16x9">
+                                        <video className="bg-light rounded ratio ratio-16x9"
+                                            id="myVideo"
+                                            key={videoInfo.videoUrl}
+                                            ref={videoRef}
+                                            width="592"
+                                            height="333"
+                                            onLoadedMetadata={handleVideoMetaData}
+                                            onTimeUpdate={getVideoTime}
+                                        >
+                                            <source src={videoInfo.videoUrl} type="video/mp4" />
+                                        </video>
+                                    </div>                                    
 
                                     {/* <span style={{ float: 'left' }}>{currentTime}</span> */}
-                                    <span style={{ float: 'right' }}>{(getStringFromMS(currentTime * 1000).split('.'))[0]}/{(getStringFromMS(Duration * 1000).split('.'))[0]}</span>
-
+                                    <span className="position-absolute top-0 start-50 translate-middle bg-light lh-1 p-1 px-2 rounded shadow">{(getStringFromMS(currentTime * 1000).split('.'))[0]}/{(getStringFromMS(Duration * 1000).split('.'))[0]}</span>
                                     <input type="range" ref={progressRef} style={{ width: '100%' }} id="vol" name="vol" min="0" max={Duration} step="0.01" onChange={progressHandler}></input>
-                                    <div id="showWord" style={{ backgroundColor: 'rgba(0,0,0,.05)', height: '48px' }}>
+                                    <div id="showWord" style={{ height: '48px' }} className="position-relative bg-light overflow-hidden rounded">
                                         {annotation.map(v => {
                                             const duration = videoRef.current.duration;
                                             const elem = document.getElementById('showWord')
@@ -327,11 +325,12 @@ function VideoAnnotation() {
                                                 overflow: 'hidden',
                                                 textAlign: 'center',
                                                 position: 'absolute',
+                                                height: '48px'
                                             };
                                             return (
-                                                <div style={mystyle}>
-                                                    {v.word}
-                                                    <span style={{ display: 'block' }}>
+                                                <div style={mystyle} className="d-flex flex-column justify-content-center lh-1">
+                                                    <span className="d-block text-nowrap mb-1" style={{fontSize: '13px'}}>{v.word}</span>
+                                                    <span className="d-block text-nowrap" style={{fontSize: '12px'}}>
                                                         {(getStringFromMS((v.vet - v.vst) * 1000).split('.'))[0]}
                                                     </span>
                                                 </div>
@@ -340,79 +339,69 @@ function VideoAnnotation() {
                                     </div>
                                 </div>
                             )}
-                        </div>
 
-                        <br />
-                        <div
-                            className="mt-5"
-                            style={{
-                                display: "flex",
-                                alignItem: "center",
-                                justifyContent: "center",
-                            }}
-                        >
-                            {videoInfo.videoUrl && videoRef.current && (
-                                <>
-                                    {(videoRef.current.paused || videoRef.current.ended) &&
-                                        <button title="play" className='btn btn-outline-info' onClick={() => videoRef.current.play()}>&#9658;</button>
-                                    }
-                                    {!(videoRef.current.paused || videoRef.current.ended) &&
-                                        <button title="pause the playback" className='btn btn-outline-info' onClick={() => videoRef.current.pause()}>&#x23F8;</button>
-                                    }
-                                </>
-                            )}
-                            {/* {videoRef && (videoRef.current.paused || videoRef.current.ended) &&
-                                <button title="play" className='btn btn-outline-info' onClick={() => videoRef.current.play()}>&#9658;</button>
-                            }
-                            {videoRef && !(videoRef.current.paused || videoRef.current.ended) &&
-                                <button title="pause the playback" className='btn btn-outline-info' onClick={() => videoRef.current.pause()}>&#x23F8;</button>
-                            } */}
+                            {/* Annotation Controls */}
+                            <div className="d-flex align-items-center justify-content-center w-100 pt-3 gap-2">
+                                {videoInfo.videoUrl && videoRef.current && (
+                                    <>
+                                        {(videoRef.current.paused || videoRef.current.ended) &&
+                                            <button title="play" className='btn btn-sm btn-info' onClick={() => videoRef.current.play()}>
+                                                <i class="fa-solid fa-play"></i>
+                                            </button>
+                                        }
+                                        {!(videoRef.current.paused || videoRef.current.ended) &&
+                                            <button title="pause the playback" className='btn btn-sm btn-info' onClick={() => videoRef.current.pause()}>
+                                                <i class="fa-solid fa-stop"></i>
+                                            </button>
+                                        }
+                                    </>
+                                )}
+                                {/* {videoRef && (videoRef.current.paused || videoRef.current.ended) &&
+                                    <button title="play" className='btn btn-outline-info' onClick={() => videoRef.current.play()}>&#9658;</button>
+                                }
+                                {videoRef && !(videoRef.current.paused || videoRef.current.ended) &&
+                                    <button title="pause the playback" className='btn btn-outline-info' onClick={() => videoRef.current.pause()}>&#x23F8;</button>
+                                } */}
 
-                            <button title="slow this video" className='btn btn-outline-info' onClick={() => (videoRef.current.playbackRate -= 0.1)}>
-                                Slow
-                            </button>
-                            <button title="take annotation start time" className='btn btn-outline-info'
-                                onClick={() => setStratTime(videoRef.current.currentTime)}
-                            >
-                                start {(getStringFromMS(StartTime * 1000).split('.'))[0]}
-                            </button>
-                            <button title="take annotation end time" className='btn btn-outline-info'
-                                onClick={() => {
-                                    setEndTime(videoRef.current.currentTime);
-                                    videoRef.current.pause();
-                                }}
-                            >
-                                end {(getStringFromMS(EndTime * 1000).split('.'))[0]}
-                            </button>
-                            <button title="fast this video" className='btn btn-outline-info' onClick={() => (videoRef.current.playbackRate += 0.1)}>
-                                Fast
-                            </button>
-                            <button title="reset video playback" className='btn btn-outline-info' onClick={() => {
-                                videoRef.current.playbackRate = 1
-                            }}>
-                                &#8634;
-                            </button>
-                            <button title="stop video" className='btn btn-outline-info'
-                                onClick={() => {
+                                <button title="stop video" className='btn btn-sm btn-info'
+                                    onClick={() => {
+                                        videoRef.current.playbackRate = 1
+                                        videoRef.current.pause();
+                                        videoRef.current.currentTime = 0;
+                                    }}
+                                >
+                                    <i class="fa-solid fa-stop"></i>
+                                </button>
+                                <button title="slow this video" className='btn btn-sm btn-outline-info' onClick={() => (videoRef.current.playbackRate -= 0.1)}>
+                                    Slow
+                                </button>
+                                <button title="take annotation start time" className='btn btn-sm btn-outline-info'
+                                    onClick={() => setStratTime(videoRef.current.currentTime)}
+                                >
+                                    Start {(getStringFromMS(StartTime * 1000).split('.'))[0]}
+                                </button>
+                                <button title="take annotation end time" className='btn btn-sm btn-outline-info'
+                                    onClick={() => {
+                                        setEndTime(videoRef.current.currentTime);
+                                        videoRef.current.pause();
+                                    }}
+                                >
+                                    End {(getStringFromMS(EndTime * 1000).split('.'))[0]}
+                                </button>
+                                <button title="fast this video" className='btn btn-sm btn-outline-info' onClick={() => (videoRef.current.playbackRate += 0.1)}>
+                                    Fast
+                                </button>
+                                <button title="reset video playback" className='btn btn-sm btn-outline-info' onClick={() => {
                                     videoRef.current.playbackRate = 1
-                                    videoRef.current.pause();
-                                    videoRef.current.currentTime = 0;
+                                }}>
+                                   <i class="fa-solid fa-arrows-rotate"></i>
+                                </button>                                
+                            </div>
+                        </section>
 
-                                }}
-                            >
-                                &#x23F9;
-                            </button>
-                        </div>
-
-                        <div className=""
-                            style={{
-                                display: "flex",
-                                alignItem: "center",
-                                justifyContent: "center",
-                            }}
-                        >
-                            <button className="btn btn-info-success">Gloss words - </button> {keywords}
-                        </div>
+                        <section className="d-flex align-items-center justify-content-center p-3 rounded-bottom border gap-2">
+                            {keywords}
+                        </section>
 
                         {/* annotation table */}
                         {/* <table
@@ -429,6 +418,9 @@ function VideoAnnotation() {
                             </thead>
                             <tbody>{tableData ? tableData : null}</tbody>
                         </table> */}
+                        <button className="btn btn-block btn-success w-100 mt-3" onClick={submitHandler}>
+                            Save Annotation
+                        </button>
                     </aside>
 
                     <aside className="col-md-4 mx-auto my-2">
@@ -498,10 +490,7 @@ function VideoAnnotation() {
                             </table>
                         </section>
                     </aside>
-                </div>
-                <button className="btn btn-info" onClick={submitHandler}>
-                    Submit
-                </button>
+                </div>                
             </div>
         </>
     );
