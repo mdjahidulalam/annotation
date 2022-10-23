@@ -11,7 +11,7 @@ const Videos = () => {
 
     useEffect(() => {
         axios
-            .get("http://localhost:4000/videos")
+            .get("http://192.168.1.34:4000/videos")
             .then((res) => {
                 setGetVideos([...res.data.json])
                 console.log(process.env.PUBLIC_URL+"/videos/SD17DSAT12S1.mp4");

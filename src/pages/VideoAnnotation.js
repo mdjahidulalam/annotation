@@ -21,6 +21,9 @@ function VideoAnnotation() {
     const [StartTime, setStratTime] = useState(0);
     const [EndTime, setEndTime] = useState(0);
 
+    // preview stop time
+    const [WhereToStop, setWhereToStop] = useState(0);
+
     // for meta key, value , handler & map to display
     const [MetaKey, setMetaKey] = useState("");
     const [MetaValue, setMetaValue] = useState("");
@@ -75,6 +78,8 @@ function VideoAnnotation() {
                     if (videoRef.current.paused || videoRef.current.ended)
                         videoRef.current.play();
                     else videoRef.current.pause();
+                    // remove auto scroll after pressing scroll bar
+                    if(event.target == document.body) event.preventDefault();
                     break;
                 case 83: // s
                     setStratTime(videoRef.current.currentTime);
@@ -156,8 +161,11 @@ function VideoAnnotation() {
     };
 
     const annotationPreviewHandler = (s, e) => {
+        document.activeElement.blur()
         videoRef.current.currentTime = s;
+        setWhereToStop(e);
         videoRef.current.play();
+
     };
     const handleVideoMetaData = (e) => {
         let htmlVideo = document.getElementById(e.target.id);
@@ -269,6 +277,11 @@ function VideoAnnotation() {
         const time = videoRef.current.currentTime;
         setCurrentTime(time)
         progressRef.current.value = time;
+        console.log(WhereToStop, videoRef.current.currentTime);
+        if (WhereToStop != 0 && videoRef.current.currentTime >= WhereToStop) {
+            setWhereToStop(0);
+            videoRef.current.pause();
+        }
 
     }
 
@@ -286,12 +299,12 @@ function VideoAnnotation() {
                         </p> */}
                         <header className="mb-3">
                             <p className="mb-1" id="signtext">
-                                <strong className="d-block">Natural Bangla:</strong> 
+                                <strong className="d-block">Natural Bangla:</strong>
                                 <span>{videoInfo.naturalText}</span>
                             </p>
                             <p className="mb-1" id="signtext">
-                                <strong className="d-block">Sign Supported Gloss:</strong> 
-                                <span>{videoInfo.signText}</span> 
+                                <strong className="d-block">Sign Supported Gloss:</strong>
+                                <span>{videoInfo.signText}</span>
                             </p>
                         </header>
                         <section className="bg-secondary d-flex flex-column justify-content-center align-items-center p-4 rounded-top">
@@ -309,7 +322,7 @@ function VideoAnnotation() {
                                         >
                                             <source src={videoInfo.videoUrl} type="video/mp4" />
                                         </video>
-                                    </div>                                    
+                                    </div>
 
                                     {/* <span style={{ float: 'left' }}>{currentTime}</span> */}
                                     <span className="position-absolute top-0 start-50 translate-middle bg-light lh-1 p-1 px-2 rounded shadow">{(getStringFromMS(currentTime * 1000).split('.'))[0]}/{(getStringFromMS(Duration * 1000).split('.'))[0]}</span>
@@ -397,8 +410,8 @@ function VideoAnnotation() {
                                 <button title="reset video playback" className='btn btn-sm btn-outline-info' onClick={() => {
                                     videoRef.current.playbackRate = 1
                                 }}>
-                                   <i class="fa-solid fa-arrows-rotate"></i>
-                                </button>                                
+                                    <i class="fa-solid fa-arrows-rotate"></i>
+                                </button>
                             </div>
                         </section>
 
@@ -406,21 +419,6 @@ function VideoAnnotation() {
                             {keywords}
                         </section>
 
-                        {/* annotation table */}
-                        {/* <table
-                            className="table-sm table-striped"
-                            style={{ margin: "0px auto", padding: "5%" }}
-                        >
-                            <thead>
-                                <tr>
-                                    <th>Word</th>
-                                    <th>Video start</th>
-                                    <th>Video end</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>{tableData ? tableData : null}</tbody>
-                        </table> */}
                         <button className="btn btn-block btn-success w-100 mt-3" onClick={submitHandler}>
                             Save Annotation
                         </button>
@@ -457,7 +455,7 @@ function VideoAnnotation() {
                                 Add New Meta
                             </button>
                         </section>
-                        
+
                         <section className="mb-5">
                             <h1 className="fs-5">Meta Table</h1>
                             <table className="table table-sm">
@@ -493,7 +491,7 @@ function VideoAnnotation() {
                             </table>
                         </section>
                     </aside>
-                </div>                
+                </div>
             </div>
         </>
     );
