@@ -25,13 +25,14 @@ const Complete = () => {
         console.log("state", GetVideos);
     }, [GetVideos]);
 
-    const allVideo = GetVideos.map((v) => {
+    const allVideo = GetVideos.map((v, index) => {
         const temp = JSON.parse(v.json);
         return (
             <Link
                 title="click to watch/annotate same video"
                 to={"/videos/" + temp.VideoId}
                 className="list-group-item list-group-item-action flex-column align-items-start "
+                key={index}
             >
                 <div className="d-flex w-100 justify-content-between">
                     <h2 className="fs-6 fw-bold my-2">{temp.video}</h2>
