@@ -4,6 +4,9 @@ import { useParams } from "react-router-dom";
 import { AppConfig } from "../config/AppConfig";
 import Nav from "../components/Nav";
 import axios from "axios";
+// import Autocomplete from 'react-autocomplete-tags';
+import ReactTags from 'react-tag-autocomplete';
+import "../assets/react-tags.css";
 
 const BASE_API_URL = AppConfig.baseApiURL;
 
@@ -20,6 +23,26 @@ function VideoAnnotation() {
     const videoRef = useRef(null);
     const [StartTime, setStratTime] = useState(0);
     const [EndTime, setEndTime] = useState(0);
+    // Tags
+    const [tags, setTags] = useState([
+        { id: 1, name: "Apples" },
+        { id: 2, name: "Pears" },
+    ]);
+    const [suggestions, setSuggestions] = useState([
+        { id: 3, name: "Bananas" },
+        { id: 4, name: "Mangos" },
+        { id: 5, name: "Lemons" },
+        { id: 6, name: "Apricots" },
+    ]);
+    const reactTags = useRef();
+
+    const onDelete = useCallback((tagIndex) => {
+        setTags(tags.filter((_, i) => i !== tagIndex))
+    }, [tags])
+
+    const onAddition = useCallback((newTag) => {
+        setTags([...tags, newTag])
+    }, [tags])
 
     // preview stop time
     const [WhereToStop, setWhereToStop] = useState(0);
@@ -79,7 +102,7 @@ function VideoAnnotation() {
                         videoRef.current.play();
                     else videoRef.current.pause();
                     // remove auto scroll after pressing scroll bar
-                    if(event.target == document.body) event.preventDefault();
+                    if (event.target == document.body) event.preventDefault();
                     break;
                 case 83: // s
                     setStratTime(videoRef.current.currentTime);
@@ -345,8 +368,8 @@ function VideoAnnotation() {
                                             };
                                             return (
                                                 <div style={mystyle} className="d-flex flex-wrap flex-column justify-content-center lh-1">
-                                                    <span className="d-block text-nowrap mb-1" style={{fontSize: '13px'}}>{v.word}</span>
-                                                    <span className="d-block text-nowrap" style={{fontSize: '12px'}}>
+                                                    <span className="d-block text-nowrap mb-1" style={{ fontSize: '13px' }}>{v.word}</span>
+                                                    <span className="d-block text-nowrap" style={{ fontSize: '12px' }}>
                                                         {(getStringFromMS((v.vet - v.vst) * 1000).split('.'))[0]}
                                                     </span>
                                                 </div>
@@ -418,7 +441,14 @@ function VideoAnnotation() {
                         <section className="d-flex align-items-center justify-content-center p-3 rounded-bottom border gap-2">
                             {keywords}
                         </section>
-
+                        <ReactTags
+                            classNames="form-control"
+                            ref={reactTags}
+                            tags={tags}
+                            suggestions={suggestions}
+                            onDelete={onDelete}
+                            onAddition={onAddition}
+                            />
                         <button className="btn btn-block btn-success w-100 mt-3" onClick={submitHandler}>
                             Save Annotation
                         </button>
