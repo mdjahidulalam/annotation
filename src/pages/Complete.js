@@ -5,7 +5,7 @@ import axios from "axios";
 import { AppConfig } from "../config/AppConfig";
 
 const BASE_API_URL = AppConfig.baseApiURL;
-console.log(BASE_API_URL);
+
 const Complete = () => {
     const [GetVideos, setGetVideos] = useState([]);
 
