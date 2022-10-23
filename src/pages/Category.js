@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
 import Nav from "../components/Nav";
 import axios from "axios";
+import { AppConfig } from "../config/AppConfig";
+
+const BASE_API_URL = AppConfig.baseApiURL;
 
 function Category() {
     const [Form, setForm] = useState({ annotation: '', meta: '' });
@@ -16,7 +19,7 @@ function Category() {
         })
     }
     const searchHandler = () => {
-        axios.post('http://192.168.1.34:4000/search', Form)
+        axios.post(`${BASE_API_URL}/search`, Form)
             .then(res => {
                 const data = res.data.map(v => {
                     v.json = JSON.parse(v.json)
@@ -83,7 +86,7 @@ function Category() {
             allData
         };
         console.log(submittedData);
-        axios.post('http://192.168.1.34:4000/category',submittedData)
+        axios.post(`${BASE_API_URL}/category`,submittedData)
             .then(res=>{
                 console.log(res.data);
             })

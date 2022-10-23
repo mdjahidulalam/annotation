@@ -2,12 +2,16 @@ import React, { useEffect, useReducer, useState } from "react";
 import { Link } from "react-router-dom";
 import Nav from "../components/Nav";
 import axios from "axios";
+import { AppConfig } from "../config/AppConfig";
+
+const BASE_API_URL = AppConfig.baseApiURL;
+console.log(BASE_API_URL);
 const Complete = () => {
     const [GetVideos, setGetVideos] = useState([]);
 
     useEffect(() => {
         axios
-            .get("http://localhost:4000/complete")
+            .get(`${BASE_API_URL}/complete`)
             .then((res) => {
                 console.log(res.data);
                 setGetVideos([...res.data]);

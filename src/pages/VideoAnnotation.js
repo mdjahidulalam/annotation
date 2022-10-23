@@ -1,8 +1,11 @@
 import React, { useCallback, useRef } from "react";
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
+import { AppConfig } from "../config/AppConfig";
 import Nav from "../components/Nav";
 import axios from "axios";
+
+const BASE_API_URL = AppConfig.baseApiURL;
 
 function VideoAnnotation() {
     const { url } = useParams();
@@ -193,7 +196,7 @@ function VideoAnnotation() {
             annotationEndTime: new Date(),
             totalTimeSpend: (new Date() - videoInfo.StartTime) / 1000
         };
-        axios.post('http://localhost:4000/save', data)
+        axios.post(`${BASE_API_URL}/save`, data)
             .then(res => {
                 console.log(res);
             })
@@ -202,7 +205,7 @@ function VideoAnnotation() {
             })
     };
     useEffect(() => {
-        const link = `http://localhost:4000/videos/${url}`;
+        const link = `${BASE_API_URL}/videos/${url}`;
         axios
             .get(link)
             .then((res) => {
@@ -328,7 +331,7 @@ function VideoAnnotation() {
                                                 height: '48px'
                                             };
                                             return (
-                                                <div style={mystyle} className="d-flex flex-column justify-content-center lh-1">
+                                                <div style={mystyle} className="d-flex flex-wrap flex-column justify-content-center lh-1">
                                                     <span className="d-block text-nowrap mb-1" style={{fontSize: '13px'}}>{v.word}</span>
                                                     <span className="d-block text-nowrap" style={{fontSize: '12px'}}>
                                                         {(getStringFromMS((v.vet - v.vst) * 1000).split('.'))[0]}
