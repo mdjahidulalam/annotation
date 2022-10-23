@@ -7,7 +7,7 @@ const Complete = () => {
 
     useEffect(() => {
         axios
-            .get("http://localhost:4000/complete")
+            .get("http://192.168.1.34:4000/complete")
             .then((res) => {
                 console.log(res.data);
                 setGetVideos([...res.data]);
