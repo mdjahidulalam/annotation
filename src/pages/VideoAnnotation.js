@@ -18,15 +18,16 @@ function VideoAnnotation() {
     const [Duration, setDuration] = useState(0);
     const progressRef = useRef();
     const [currentTime, setCurrentTime] = useState(0);
+
     // for video
     const [videoInfo, setVideoInfo] = useState({});
     const videoRef = useRef(null);
     const [StartTime, setStratTime] = useState(0);
     const [EndTime, setEndTime] = useState(0);
-    // Tags
+    // react-tag-autocomplete
     const [tags, setTags] = useState([
-        { id: 1, name: "Apples" },
-        { id: 2, name: "Pears" },
+        // { id: 1, name: "Apples" },
+        // { id: 2, name: "Pears" },
     ]);
     const [suggestions, setSuggestions] = useState([
         { id: 3, name: "Bananas" },
@@ -40,9 +41,37 @@ function VideoAnnotation() {
         setTags(tags.filter((_, i) => i !== tagIndex))
     }, [tags])
 
-    const onAddition = useCallback((newTag) => {
-        setTags([...tags, newTag])
-    }, [tags])
+    // const onAddition = useCallback((newTag) => {
+    //     let flag = true;
+    //     tags.forEach(v => {
+    //         if (v.name === newTag.name) {
+    //             flag = false;
+    //         }
+    //     });
+        
+    //     if (flag) {
+    //         setTags([...tags, newTag]);
+    //         setGlossWords(tags);
+    //     };
+    // }, [tags])
+    const onAddition = (newTag) => {
+        let flag = true;
+        tags.forEach(v => {
+            if (v.name === newTag.name) {
+                flag = false;
+            }
+        });
+        
+        if (flag) {
+            setTags([...tags, newTag]);
+        };
+    }
+
+    // return true all time coz we dont need now
+    const validationHandler = (tag) => {
+        return true;
+    }
+    // -------- end react-tag-autocomplete
 
     // preview stop time
     const [WhereToStop, setWhereToStop] = useState(0);
@@ -102,7 +131,7 @@ function VideoAnnotation() {
                         videoRef.current.play();
                     else videoRef.current.pause();
                     // remove auto scroll after pressing scroll bar
-                    if (event.target == document.body) event.preventDefault();
+                    if (event.target === document.body) event.preventDefault();
                     break;
                 case 83: // s
                     setStratTime(videoRef.current.currentTime);
@@ -129,43 +158,6 @@ function VideoAnnotation() {
     }, [handleKeyPress]);
     // ---- end keyborad event
 
-    // get selected text
-    const handleMouseUp = () => {
-        const selectedText = getSelectedText();
-        const startIndex = window.getSelection().anchorOffset;
-        const endIndex = window.getSelection().focusOffset;
-        console.log(
-            window.getSelection().anchorOffset,
-            window.getSelection().focusOffset
-        );
-        if (startIndex === endIndex) return;
-        // const text = selectedText + "[" + startIndex + ", " + endIndex + "]";
-        // tsi = text start index, vst = video start time
-        const temp = {
-            id: Count,
-            word: selectedText,
-            tsi: startIndex,
-            tse: endIndex,
-            vst: StartTime,
-            vet: EndTime,
-        };
-        setCount((prev) => prev + 1);
-        // make list of annotation
-        setAnnotation([...annotation, temp]);
-        console.log(annotation);
-        // generate srt
-        trackTest.addCue(new VTTCue(temp.vst, temp.vet, temp.word));
-    };
-    const getSelectedText = () => {
-        if (window.getSelection) {
-            // console.log(window.getSelection().anchorOffset, window.getSelection().focusOffset);
-            return window.getSelection().toString();
-        } else if (document.selection) {
-            // console.log(window.getSelection().anchorOffset, window.getSelection().focusOffset);
-            return document.selection.createRange().text;
-        }
-        return "";
-    };
     // delete annotation
     const annotationDeleteHandler = (id) => {
         // eslint-disable-next-line
@@ -260,6 +252,7 @@ function VideoAnnotation() {
     //     console.log('info',videoInfo);
     // },[videoInfo])
     const words = videoInfo.selectedGloss ? videoInfo.selectedGloss : [];
+
     const handleWords = (word) => {
         document.activeElement.blur()
         if (StartTime === EndTime || StartTime > EndTime) return;
@@ -288,10 +281,32 @@ function VideoAnnotation() {
         console.log('key pressed');
         e.preventDefault();
     }
-    const keywords = words.map(v => <button className='btn btn-sm btn-light' onKeyUp={(e) => {
-        e.preventDefault();
-    }} onClick={() => handleWords(v)}>{v}</button>)
+    
+    const keywords = words.map(v =>
+        <button
+            className='btn btn-sm btn-light'
+            onKeyUp={(e) => {
+                e.preventDefault();
+            }}
+            onClick={() => handleWords(v)}
+        >
+            {v}
+        </button>
+    )
+    const formTags = tags.map(v =>
+        <button
+            className='btn btn-sm btn-light'
+            onKeyUp={(e) => {
+                e.preventDefault();
+            }}
+            onClick={() => handleWords(v.name)}
+        >
+            {v.name}
+        </button>
+    )
+
     const progressHandler = (e) => {
+        setWhereToStop(0);
         videoRef.current.currentTime = e.target.value;
     }
 
@@ -301,7 +316,7 @@ function VideoAnnotation() {
         setCurrentTime(time)
         progressRef.current.value = time;
         console.log(WhereToStop, videoRef.current.currentTime);
-        if (WhereToStop != 0 && videoRef.current.currentTime >= WhereToStop) {
+        if (WhereToStop !== 0 && videoRef.current.currentTime >= WhereToStop) {
             setWhereToStop(0);
             videoRef.current.pause();
         }
@@ -440,6 +455,7 @@ function VideoAnnotation() {
 
                         <section className="d-flex align-items-center justify-content-center p-3 rounded-bottom border gap-2">
                             {keywords}
+                            {formTags}
                         </section>
                         <ReactTags
                             classNames="form-control"
@@ -448,7 +464,9 @@ function VideoAnnotation() {
                             suggestions={suggestions}
                             onDelete={onDelete}
                             onAddition={onAddition}
-                            />
+                            allowNew={true}
+                            onValidate={validationHandler}
+                        />
                         <button className="btn btn-block btn-success w-100 mt-3" onClick={submitHandler}>
                             Save Annotation
                         </button>
