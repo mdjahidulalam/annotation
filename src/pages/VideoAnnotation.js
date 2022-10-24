@@ -399,12 +399,12 @@ function VideoAnnotation() {
                                 {videoInfo.videoUrl && videoRef.current && (
                                     <>
                                         {(videoRef.current.paused || videoRef.current.ended) &&
-                                            <button title="play" className='btn btn-sm btn-info' onClick={() => videoRef.current.play()}>
+                                            <button title="play | press spacebar to play" className='btn btn-sm btn-info' onClick={() => videoRef.current.play()}>
                                                 <i class="fa-solid fa-play"></i>
                                             </button>
                                         }
                                         {!(videoRef.current.paused || videoRef.current.ended) &&
-                                            <button title="pause the playback" className='btn btn-sm btn-info' onClick={() => videoRef.current.pause()}>
+                                            <button title="pause the playback | press spacebar to pause" className='btn btn-sm btn-info' onClick={() => videoRef.current.pause()}>
                                                 <i class="fa-solid fa-stop"></i>
                                             </button>
                                         }
@@ -429,12 +429,12 @@ function VideoAnnotation() {
                                 <button title="slow this video" className='btn btn-sm btn-info' onClick={() => (videoRef.current.playbackRate -= 0.1)}>
                                     <i class="fa-solid fa-backward-fast"></i>
                                 </button>
-                                <button title="take annotation start time" className='btn btn-sm btn-outline-info'
+                                <button title="take annotation start time or press S" className='btn btn-sm btn-outline-info'
                                     onClick={() => setStratTime(videoRef.current.currentTime)}
                                 >
                                     Start {(getStringFromMS(StartTime * 1000).split('.'))[0]}
                                 </button>
-                                <button title="take annotation end time" className='btn btn-sm btn-outline-info'
+                                <button title="take annotation end time or press E" className='btn btn-sm btn-outline-info'
                                     onClick={() => {
                                         setEndTime(videoRef.current.currentTime);
                                         videoRef.current.pause();
