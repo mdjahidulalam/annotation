@@ -331,16 +331,16 @@ function VideoAnnotation() {
 
             <div className="container py-4">
                 <div className="row">
-                    <aside className="col-md-8 my-2">
+                    <aside className="col-md-6 col-xl-6">
                         {/* <p className="text-center" id="signtext" onMouseUp={handleMouseUp}>
                             {videoInfo.signText}
                         </p> */}
-                        <header className="mb-3">
-                            <p className="mb-1" id="signtext">
+                        <header className="row mb-3">                            
+                            <p className="col-12 col-md-6 col-xxl-12 mb-1" id="signtext">
                                 <strong className="d-block">Natural Bangla:</strong>
                                 <span>{videoInfo.naturalText}</span>
                             </p>
-                            <p className="mb-1" id="signtext">
+                            <p className="col-12 col-md-6 col-xxl-12 mb-1" id="signtext">
                                 <strong className="d-block">Sign Supported Gloss:</strong>
                                 <span>{videoInfo.signText}</span>
                             </p>
@@ -426,8 +426,8 @@ function VideoAnnotation() {
                                 >
                                     <i class="fa-solid fa-stop"></i>
                                 </button>
-                                <button title="slow this video" className='btn btn-sm btn-outline-info' onClick={() => (videoRef.current.playbackRate -= 0.1)}>
-                                    Slow
+                                <button title="slow this video" className='btn btn-sm btn-info' onClick={() => (videoRef.current.playbackRate -= 0.1)}>
+                                    <i class="fa-solid fa-backward-fast"></i>
                                 </button>
                                 <button title="take annotation start time" className='btn btn-sm btn-outline-info'
                                     onClick={() => setStratTime(videoRef.current.currentTime)}
@@ -442,10 +442,10 @@ function VideoAnnotation() {
                                 >
                                     End {(getStringFromMS(EndTime * 1000).split('.'))[0]}
                                 </button>
-                                <button title="fast this video" className='btn btn-sm btn-outline-info' onClick={() => (videoRef.current.playbackRate += 0.1)}>
-                                    Fast
+                                <button title="fast this video" className='btn btn-sm btn-info' onClick={() => (videoRef.current.playbackRate += 0.1)}>
+                                    <i class="fa-solid fa-forward-fast"></i>
                                 </button>
-                                <button title="reset video playback" className='btn btn-sm btn-outline-info' onClick={() => {
+                                <button title="reset video playback" className='btn btn-sm btn-info' onClick={() => {
                                     videoRef.current.playbackRate = 1
                                 }}>
                                     <i class="fa-solid fa-arrows-rotate"></i>
@@ -453,7 +453,7 @@ function VideoAnnotation() {
                             </div>
                         </section>
 
-                        <section className="d-flex align-items-center justify-content-center p-3 rounded-bottom border gap-2">
+                        <section className="d-flex flex-wrap align-items-center justify-content-center p-3 rounded-bottom border gap-2">
                             {keywords}
                             {formTags}
                         </section>
@@ -472,36 +472,40 @@ function VideoAnnotation() {
                         </button>
                     </aside>
 
-                    <aside className="col-md-4 mx-auto my-2">
-                        <section className="mb-5">
+                    <aside className="col-md-6 col-xl-5 mx-auto">
+                        <section className="mb-4">
                             <h1 className="fs-5">Insert New Meta</h1>
-                            <div className="mb-2 form-group">
-                                <label htmlFor="key">Key</label>
-                                <input
-                                    type="text"
-                                    onChange={handleMetaKey}
-                                    name="key"
-                                    className="form-control form-control-sm"
-                                    value={MetaKey}
-                                    id="key"
-                                    placeholder="Enter key"
-                                />
-                            </div>
-                            <div className="mb-3 form-group">
-                                <label htmlFor="value">Value</label>
-                                <input
-                                    type="text"
-                                    onChange={handleMetaValue}
-                                    name="value"
-                                    className="form-control form-control-sm"
-                                    value={MetaValue}
-                                    id="value"
-                                    placeholder="Enter value"
-                                />
-                            </div>
-                            <button className='btn btn-success btn-sm w-100' type="submit" onClick={handleAddMeta}>
-                                Add New Meta
-                            </button>
+                            <div className="row g-md-2 g-xxl-3">
+                                <div className="col-12 col-md-4 mb-2 form-group">
+                                    <label htmlFor="key">Key</label>
+                                    <input
+                                        type="text"
+                                        onChange={handleMetaKey}
+                                        name="key"
+                                        className="form-control form-control-sm"
+                                        value={MetaKey}
+                                        id="key"
+                                        placeholder="Enter key"
+                                    />
+                                </div>
+                                <div className="col-12 col-md-5 mb-3 form-group">
+                                    <label htmlFor="value">Value</label>
+                                    <input
+                                        type="text"
+                                        onChange={handleMetaValue}
+                                        name="value"
+                                        className="form-control form-control-sm"
+                                        value={MetaValue}
+                                        id="value"
+                                        placeholder="Enter value"
+                                    />
+                                </div>
+                                <div className="col-12 col-md-3 mb-2">
+                                    <button className='btn btn-success btn-sm w-100 mt-md-4' type="submit" onClick={handleAddMeta}>
+                                        Add New
+                                    </button>
+                                </div>
+                            </div>                            
                         </section>
 
                         <section className="mb-5">
