@@ -38,22 +38,14 @@ function VideoAnnotation() {
     const reactTags = useRef();
 
     const onDelete = useCallback((tagIndex) => {
+        console.log('index', tags[tagIndex].name);
+        annotation.forEach(v => console.log(v.word))
+        const k = annotation.filter(v => v.word !== tags[tagIndex].name);
+        console.log(k);
+        setAnnotation(annotation.filter(v => v.word !== tags[tagIndex].name))
         setTags(tags.filter((_, i) => i !== tagIndex))
-    }, [tags])
+    }, [tags, annotation])
 
-    // const onAddition = useCallback((newTag) => {
-    //     let flag = true;
-    //     tags.forEach(v => {
-    //         if (v.name === newTag.name) {
-    //             flag = false;
-    //         }
-    //     });
-        
-    //     if (flag) {
-    //         setTags([...tags, newTag]);
-    //         setGlossWords(tags);
-    //     };
-    // }, [tags])
     const onAddition = (newTag) => {
         let flag = true;
         tags.forEach(v => {
@@ -61,7 +53,7 @@ function VideoAnnotation() {
                 flag = false;
             }
         });
-        
+
         if (flag) {
             setTags([...tags, newTag]);
         };
@@ -127,6 +119,10 @@ function VideoAnnotation() {
                     if (videoInfo.videoUrl) videoRef.current.currentTime += 0.01;
                     break;
                 case 32: // space
+                    if (document.activeElement.className === 'react-tags__search-input') {
+                        console.log('find');
+                        return;
+                    }
                     if (videoRef.current.paused || videoRef.current.ended)
                         videoRef.current.play();
                     else videoRef.current.pause();
@@ -281,7 +277,7 @@ function VideoAnnotation() {
         console.log('key pressed');
         e.preventDefault();
     }
-    
+
     const keywords = words.map(v =>
         <button
             className='btn btn-sm btn-light'
@@ -335,7 +331,7 @@ function VideoAnnotation() {
                         {/* <p className="text-center" id="signtext" onMouseUp={handleMouseUp}>
                             {videoInfo.signText}
                         </p> */}
-                        <header className="row mb-3">                            
+                        <header className="row mb-3">
                             <p className="col-12 col-md-6 col-xxl-12 mb-1" id="signtext">
                                 <strong className="d-block">Natural Bangla:</strong>
                                 <span>{videoInfo.naturalText}</span>
@@ -399,12 +395,22 @@ function VideoAnnotation() {
                                 {videoInfo.videoUrl && videoRef.current && (
                                     <>
                                         {(videoRef.current.paused || videoRef.current.ended) &&
-                                            <button title="play | press spacebar to play" className='btn btn-sm btn-info' onClick={() => videoRef.current.play()}>
+                                            <button
+                                                title="play | press spacebar to play"
+                                                className='btn btn-sm btn-info'
+                                                onClick={() => videoRef.current.play()}
+                                                onKeyUp={(e) => e.preventDefault()}
+                                            >
                                                 <i class="fa-solid fa-play"></i>
                                             </button>
                                         }
                                         {!(videoRef.current.paused || videoRef.current.ended) &&
-                                            <button title="pause the playback | press spacebar to pause" className='btn btn-sm btn-info' onClick={() => videoRef.current.pause()}>
+                                            <button
+                                                title="pause the playback | press spacebar to pause"
+                                                className='btn btn-sm btn-info'
+                                                onClick={() => videoRef.current.pause()}
+                                                onKeyUp={(e) => e.preventDefault()}
+                                            >
                                                 <i class="fa-solid fa-stop"></i>
                                             </button>
                                         }
@@ -423,14 +429,21 @@ function VideoAnnotation() {
                                         videoRef.current.pause();
                                         videoRef.current.currentTime = 0;
                                     }}
+                                    onKeyUp={(e) => e.preventDefault()}
                                 >
                                     <i class="fa-solid fa-stop"></i>
                                 </button>
-                                <button title="slow this video" className='btn btn-sm btn-info' onClick={() => (videoRef.current.playbackRate -= 0.1)}>
+                                <button
+                                    title="slow this video"
+                                    className='btn btn-sm btn-info'
+                                    onClick={() => (videoRef.current.playbackRate -= 0.1)}
+                                    onKeyUp={(e) => e.preventDefault()}
+                                >
                                     <i class="fa-solid fa-backward-fast"></i>
                                 </button>
                                 <button title="take annotation start time or press S" className='btn btn-sm btn-outline-info'
                                     onClick={() => setStratTime(videoRef.current.currentTime)}
+                                    onKeyUp={(e) => e.preventDefault()}
                                 >
                                     Start {(getStringFromMS(StartTime * 1000).split('.'))[0]}
                                 </button>
@@ -439,15 +452,26 @@ function VideoAnnotation() {
                                         setEndTime(videoRef.current.currentTime);
                                         videoRef.current.pause();
                                     }}
+                                    onKeyUp={(e) => e.preventDefault()}
                                 >
                                     End {(getStringFromMS(EndTime * 1000).split('.'))[0]}
                                 </button>
-                                <button title="fast this video" className='btn btn-sm btn-info' onClick={() => (videoRef.current.playbackRate += 0.1)}>
+                                <button
+                                    title="fast this video"
+                                    className='btn btn-sm btn-info'
+                                    onClick={() => (videoRef.current.playbackRate += 0.1)}
+                                    onKeyUp={(e) => e.preventDefault()}
+                                >
                                     <i class="fa-solid fa-forward-fast"></i>
                                 </button>
-                                <button title="reset video playback" className='btn btn-sm btn-info' onClick={() => {
-                                    videoRef.current.playbackRate = 1
-                                }}>
+                                <button
+                                    title="reset video playback"
+                                    className='btn btn-sm btn-info'
+                                    onClick={() => {
+                                        videoRef.current.playbackRate = 1
+                                    }}
+                                    onKeyUp={(e) => e.preventDefault()}
+                                >
                                     <i class="fa-solid fa-arrows-rotate"></i>
                                 </button>
                             </div>
@@ -459,6 +483,8 @@ function VideoAnnotation() {
                         </section>
                         <ReactTags
                             classNames="form-control"
+                            placeholderText="Add new gloss"
+                            id="tagsId"
                             ref={reactTags}
                             tags={tags}
                             suggestions={suggestions}
@@ -466,6 +492,7 @@ function VideoAnnotation() {
                             onAddition={onAddition}
                             allowNew={true}
                             onValidate={validationHandler}
+                            onKeyDown={(e) => e.preventDefault()}
                         />
                         <button className="btn btn-block btn-success w-100 mt-3" onClick={submitHandler}>
                             Save Annotation
@@ -505,7 +532,7 @@ function VideoAnnotation() {
                                         Add New
                                     </button>
                                 </div>
-                            </div>                            
+                            </div>
                         </section>
 
                         <section className="mb-5">

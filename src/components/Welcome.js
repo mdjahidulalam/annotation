@@ -4,7 +4,6 @@ const Welcome = () => {
     return (
         <>
             <Nav />
-            "welcome"
         </>
     )
 }

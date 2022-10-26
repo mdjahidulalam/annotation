@@ -13,7 +13,7 @@ const UserReducer = (state,action) =>{
         case UserActions.GET_USER_INFO_BY_ID:
             break;
         case UserActions.AUTH_USER_BY_EMAIL_PASSWORD:
-            if(action.value.email === 'jahidsagar@gmail.com' && action.value.password === '1234567'){
+            if(action.value.email === 'user1@gmail.com' && action.value.password === '1234567'){
                 UserObject.setUserInformation({id:123,name:'jahid',role:'user'})
                 return UserObject.isAuthenticate();
             }
