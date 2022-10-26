@@ -7,6 +7,7 @@ import axios from "axios";
 // import Autocomplete from 'react-autocomplete-tags';
 import ReactTags from 'react-tag-autocomplete';
 import "../assets/react-tags.css";
+import "../assets/video-annotation.css";
 
 const BASE_API_URL = AppConfig.baseApiURL;
 
@@ -331,16 +332,18 @@ function VideoAnnotation() {
                         {/* <p className="text-center" id="signtext" onMouseUp={handleMouseUp}>
                             {videoInfo.signText}
                         </p> */}
-                        <header className="row mb-3">
+                        
+                        <header className="row d-md-none mb-3">                            
                             <p className="col-12 col-md-6 col-xxl-12 mb-1" id="signtext">
                                 <strong className="d-block">Natural Bangla:</strong>
-                                <span>{videoInfo.naturalText}</span>
+                                <span className="text-success">{videoInfo.naturalText}</span>
                             </p>
                             <p className="col-12 col-md-6 col-xxl-12 mb-1" id="signtext">
                                 <strong className="d-block">Sign Supported Gloss:</strong>
-                                <span>{videoInfo.signText}</span>
+                                <span className="text-success">{videoInfo.signText}</span>
                             </p>
-                        </header>
+                        </header> 
+                       
                         <section className="bg-secondary d-flex flex-column justify-content-center align-items-center p-4 rounded-top">
                             {videoInfo.videoUrl && (
                                 <div className="w-100 position-relative">
@@ -494,14 +497,24 @@ function VideoAnnotation() {
                             onValidate={validationHandler}
                             onKeyDown={(e) => e.preventDefault()}
                         />
-                        <button className="btn btn-block btn-success w-100 mt-3" onClick={submitHandler}>
+                        <button className="btn btn-block btn-success w-100 mt-3 mb-5 mb-md-0" onClick={submitHandler}>
                             Save Annotation
                         </button>
                     </aside>
 
                     <aside className="col-md-6 col-xl-5 mx-auto">
                         <section className="mb-4">
-                            <h1 className="fs-5">Insert New Meta</h1>
+                            <header className="row d-none d-md-flex mb-3">                            
+                                <p className="col-12 col-md-6 col-xxl-12 mb-1" id="signtext">
+                                    <strong className="d-block fs-6">Natural Bangla:</strong>
+                                    <span className="text-success">{videoInfo.naturalText}</span>
+                                </p>
+                                <p className="col-12 col-md-6 col-xxl-12 mb-1" id="signtext">
+                                    <strong className="d-block fs-6">Sign Supported Gloss:</strong>
+                                    <span className="text-success">{videoInfo.signText}</span>
+                                </p>
+                            </header>
+                            <h1 className="fs-6 fw-bold">Insert New Meta</h1>
                             <div className="row g-md-2 g-xxl-3">
                                 <div className="col-12 col-md-4 mb-2 form-group">
                                     <label htmlFor="key">Key</label>
@@ -537,37 +550,39 @@ function VideoAnnotation() {
 
                         <section className="mb-5">
                             <h1 className="fs-5">Meta Table</h1>
-                            <table className="table table-sm">
-                                <thead>
-                                    <tr>
-                                        <th>Key</th>
-                                        <th>Value</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {metaTableData ? metaTableData : null}</tbody>
-                            </table>
+                            <div className="table-responsive" style={{maxHeight: '210px'}}>
+                                <table className="table table-sm mb-0">
+                                    <thead className="table-header">
+                                        <tr>
+                                            <th className="table-header-th">Key</th>
+                                            <th className="table-header-th">Value</th>
+                                            <th className="table-header-th">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {metaTableData ? metaTableData : null}</tbody>
+                                </table>
+                            </div>
                         </section>
 
                         <section className="mb-5">
                             <h1 className="fs-5">Annotation Table</h1>
-                            <table
-                                className="table table-sm"
-                                style={{ margin: "0px auto", padding: "5%" }}
-                            >
-                                <thead>
-                                    <tr>
-                                        <th>Word</th>
-                                        <th width="25%">Video Start</th>
-                                        <th width="25%" >Video End</th>
-                                        <th width="25">Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {tableData ? tableData : null}
-                                </tbody>
-                            </table>
+                            <div className="table-responsive" style={{maxHeight: '210px'}}>
+                                <table className="table table-sm mb-0">
+                                    <thead className="table-header">
+                                        <tr>
+                                            <th className="table-header-th">Word</th>
+                                            <th className="table-header-th" width="25%">Video Start</th>
+                                            <th className="table-header-th" width="25%" >Video End</th>
+                                            <th className="table-header-th" width="25">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {tableData ? tableData : null}
+                                    </tbody>
+                                </table>
+                            </div>
+
                         </section>
                     </aside>
                 </div>
