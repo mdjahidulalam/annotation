@@ -2,6 +2,7 @@ import React, { useCallback, useRef } from "react";
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { AppConfig } from "../config/AppConfig";
+import moment from "moment/moment";
 import Nav from "../components/Nav";
 import axios from "axios";
 // import Autocomplete from 'react-autocomplete-tags';
@@ -143,8 +144,10 @@ function VideoAnnotation() {
         [videoInfo.videoUrl]
     );
     useEffect(() => {
+        console.log("Starttime", StartTime);
+        console.log('time: ', moment().second(StartTime));
 
-    }, [videoInfo])
+    }, [StartTime])
     useEffect(() => {
         // attach the event listener
         document.addEventListener("keydown", handleKeyPress);
